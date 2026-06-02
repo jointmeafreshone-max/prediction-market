@@ -22,13 +22,13 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+      - uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+      - uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
         with:
           context: .
           file: infra/docker/Dockerfile
@@ -38,16 +38,3 @@ jobs:
             ghcr.io/kuestcom/prediction-market:${{ github.sha }}
           build-args: |
             COMMIT_SHA=${{ github.sha }}
-            SITE_URL=${{ vars.SITE_URL }}
-            REOWN_APPKIT_PROJECT_ID=${{ vars.REOWN_APPKIT_PROJECT_ID }}
-
-      - name: Trigger deploy
-        env:
-          DEPLOY_WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
-        run: |
-          set -euo pipefail
-          if [ -z "$DEPLOY_WEBHOOK_URL" ]; then
-            echo "DEPLOY_WEBHOOK_URL secret is not set." >&2
-            exit 1
-          fi
-          curl --fail --silent --show-error --output /dev/null --request POST "$DEPLOY_WEBHOOK_URL"
