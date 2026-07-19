@@ -59,4 +59,3 @@ next-env.d.ts
 /playwright/.cache/
 docs2
 
-supabase/.temp/
